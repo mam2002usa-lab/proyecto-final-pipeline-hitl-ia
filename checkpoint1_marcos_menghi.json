@@ -1,0 +1,205 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "responseMode": "responseNodes",
+          "autoSaveHighlightedData": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -1216,
+        -80
+      ],
+      "id": "00464f7b-ffb7-4a1f-a79b-74a3db0602f0",
+      "name": "When chat message received",
+      "webhookId": "f5dd765e-4874-4660-9447-e09e4d42a79b"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "ROL\nSos el asistente virtual de mates.mam, un emprendimiento dedicado a la venta de mates artesanales y accesorios.\n\nÁMBITO\nTu función es atender consultas de clientes relacionadas con productos, precios, stock y características de los productos disponibles.\n\nOBJETIVO\nBrindar respuestas claras, breves y precisas utilizando la información actualizada disponible en Airtable.\n\nREGLAS\n- Si el cliente pregunta por un producto, precio, stock o característica, consultá Airtable antes de responder.\n- Si el cliente pregunta qué productos están disponibles, consultá Airtable y mencioná los productos encontrados.\n- No inventes precios, stock, características ni información que no esté disponible en Airtable.\n- Si un dato no se encuentra en Airtable, indicá claramente que no disponés de esa información.\n- Respondé siempre en español, de manera amable, profesional y directa.\n- No utilices lenguaje inclusivo.\n- No ejecutes acciones que no estén expresamente habilitadas mediante las herramientas disponibles.\n\nESCALAMIENTO Y LIMITACIONES\n- Si no podés responder con la información disponible, indicá la limitación y no inventes una respuesta.\n- No modifiques información de productos ni inventes disponibilidad.\n- No confirmes reservas, pagos, envíos ni compras si esa acción no está habilitada por una herramienta.",
+          "maxIterations": 5,
+          "forceToolCallOnFirstIteration": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -896,
+        -112
+      ],
+      "id": "463c18e5-e438-4273-933f-c007ee3d69d8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1040,
+        64
+      ],
+      "id": "ba269cec-f5c3-4b4d-97f4-1128e2d0cdd7",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Busca información actualizada de los productos de mates.mam en Airtable. Utilizá esta herramienta de forma autónoma siempre que el cliente consulte por productos disponibles, precios, stock, características, materiales, colores, tipos o descripciones.\n\nTambién utilizá Airtable cuando el cliente solicite información general sobre qué productos están disponibles o compare dos o más productos.\n\nAntes de responder cualquier consulta que dependa de información comercial actualizada, consultá Airtable para evitar inventar datos.\n\nLa herramienta devuelve información sobre nombre, descripción, tipo, material, color, precio y stock. Utilizá exclusivamente los datos obtenidos de Airtable para responder consultas relacionadas con estos aspectos.\n\nSi Airtable no devuelve información sobre el producto solicitado, indicá al cliente que no se encontró ese producto o dato en la información disponible. No inventes precios, stock, características ni disponibilidad.",
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appXAmDZ1F1e3ZpFt",
+          "mode": "list",
+          "cachedResultName": "Proyecto Final – Pipeline HITL con IA",
+          "cachedResultUrl": "https://airtable.com/appXAmDZ1F1e3ZpFt"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblYViwEf1plgg7jj",
+          "mode": "list",
+          "cachedResultName": "Productos de mates.mam",
+          "cachedResultUrl": "https://airtable.com/appXAmDZ1F1e3ZpFt/tblYViwEf1plgg7jj"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.2,
+      "position": [
+        -608,
+        64
+      ],
+      "id": "bb301af8-e02f-40b4-ad4f-19389541ec6a",
+      "name": "Search records in Airtable",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "wsVobSScDQFO9k9H",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "marcosmenghi@hotmail.com",
+        "subject": "Registro de ejecución - mates.mam",
+        "message": "=<h3>Registro de ejecución - mates.mam</h3>  <p><strong>Consulta del cliente:</strong><br> {{ $('When chat message received').item.json.chatInput }}</p>  <p><strong>Respuesta del AI Agent:</strong><br> {{ $json.output }}</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -448,
+        -128
+      ],
+      "id": "e0223714-f29b-49bf-bee8-e69dbf199394",
+      "name": "Send a message",
+      "webhookId": "9fe10805-f639-42f8-878a-9140cbc2903f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kvTG3WqzBTeObUT9",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        -304,
+        80
+      ],
+      "id": "6d8baf5f-1c55-4353-bf15-939e1737a75f",
+      "name": "Chat",
+      "webhookId": "652d0739-d2cd-4d1a-a567-dba1a17327d3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records in Airtable": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "a0c4cc07-ef86-4618-8ba9-3e7f05ebc05d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "87d28270b6e9e7c409bd40073ba1fa6399cdf7aa8fb1b6624970805a79428f84"
+  },
+  "nodeGroups": [],
+  "id": "QlFChBaoeeTzjloM",
+  "tags": []
+}
