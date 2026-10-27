@@ -96,3 +96,38 @@ El Dashboard de Control fue desarrollado mediante Airtable Interfaces y permite 
 **Marcos Menghi**
 
 **Año:** 2026
+
+
+## Preentrega N.º 4 – Integraciones avanzadas en n8n
+
+### Objetivo
+
+Integrar herramientas externas de negocio al workflow existente, incorporando controles preventivos para evitar respuestas automáticas, duplicación de contactos y envío de correos sin revisión humana.
+
+### Herramientas integradas
+
+* **Orquestador:** n8n.
+* **CRM:** HubSpot.
+* **Casilla de correo:** Gmail.
+* **Canal de operaciones:** Slack.
+
+Las credenciales de las tres herramientas externas se conectaron mediante OAuth2.
+
+### Controles implementados
+
+1. **Filtro anti-auto-respuestas:** el nodo IF2 identifica determinados correos automáticos para evitar bucles.
+2. **Búsqueda de contactos:** HubSpot Search contacts consulta si el contacto ya existe antes de decidir el siguiente paso.
+3. **Validación de existencia:** IF3 dirige el flujo según el resultado de la búsqueda.
+4. **Human-in-the-loop:** Gmail Create a draft genera un borrador para revisión humana, sin enviar automáticamente la respuesta.
+5. **Limpieza de datos:** Edit Fields5 prepara un mensaje reducido con remitente, asunto y notificación.
+6. **Notificación operativa:** Slack informa sobre la nueva consulta y la creación del borrador.
+
+### Archivo del workflow
+
+`checkpoint4_marcos_menghi.json`
+
+El archivo JSON permite importar el workflow en n8n.
+
+### Evidencias
+
+Se incorporará una captura de la sección Credentials de n8n donde se visualicen las conexiones activas de HubSpot, Gmail y Slack.
