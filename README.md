@@ -131,3 +131,10 @@ El archivo JSON permite importar el workflow en n8n.
 ### Evidencias
 
 Se incorporará una captura de la sección Credentials de n8n donde se visualicen las conexiones activas de HubSpot, Gmail y Slack.
+
+
+### Evidencia de conexiones
+
+Captura de las credenciales de HubSpot, Gmail y Slack configuradas en n8n.
+
+![Credenciales de n8n](evidencias/credenciales_n8n.png)
