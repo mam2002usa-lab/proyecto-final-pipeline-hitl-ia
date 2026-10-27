@@ -1,0 +1,1697 @@
+{
+  "name": "Manager - Orquestador mates.mam",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "responseMode": "responseNodes",
+          "autoSaveHighlightedData": false
+        }
+      },
+      "id": "00464f7b-ffb7-4a1f-a79b-74a3db0602f0",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -2944,
+        -640
+      ],
+      "webhookId": "f5dd765e-4874-4660-9447-e09e4d42a79b"
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appXAmDZ1F1e3ZpFt",
+          "mode": "list",
+          "cachedResultName": "Proyecto Final – Pipeline HITL con IA",
+          "cachedResultUrl": "https://airtable.com/appXAmDZ1F1e3ZpFt"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblNgH9IPGv9AGGf2",
+          "mode": "list",
+          "cachedResultName": "Memoria de sesiones",
+          "cachedResultUrl": "https://airtable.com/appXAmDZ1F1e3ZpFt/tblNgH9IPGv9AGGf2"
+        },
+        "filterByFormula": "={Session_ID} = '{{ $(\"When chat message received\").item.json.sessionId }}'",
+        "options": {}
+      },
+      "id": "01261fb8-8960-421d-a36f-7da7058620f8",
+      "name": "Search records",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -2672,
+        -528
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "wsVobSScDQFO9k9H",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "94858401-ab41-44dc-9ef5-23d82337472b",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "58b3b617-6117-4f26-92a5-ceff69dec437",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        -2416,
+        -592
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appXAmDZ1F1e3ZpFt",
+          "mode": "list",
+          "cachedResultName": "Proyecto Final – Pipeline HITL con IA",
+          "cachedResultUrl": "https://airtable.com/appXAmDZ1F1e3ZpFt"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblNgH9IPGv9AGGf2",
+          "mode": "list",
+          "cachedResultName": "Memoria de sesiones",
+          "cachedResultUrl": "https://airtable.com/appXAmDZ1F1e3ZpFt/tblNgH9IPGv9AGGf2"
+        },
+        "filterByFormula": "={Session_ID} = '{{ $(\"When chat message received\").item.json.sessionId }}'",
+        "options": {}
+      },
+      "id": "6267d40e-6b3c-40be-b451-b619f681958a",
+      "name": "Search records1",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -2144,
+        -688
+      ],
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "wsVobSScDQFO9k9H",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "76c8d48d-2872-4e21-805c-db72ebc5f477",
+              "name": "Session_ID",
+              "value": "={{ $('When chat message received').item.json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "c0cc8cb9-eac4-4a55-bbff-93a93c58897e",
+              "name": "Fecha de actualización",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "bd39543f-1a92-452d-9c79-18e31c6c4f44",
+              "name": "Resumen consolidado",
+              "value": "={{ $json.fields?.[\"Resumen consolidado\"] || \"Primera interacción del cliente. Todavía no hay un resumen de conversaciones anteriores.\" }}",
+              "type": "string"
+            },
+            {
+              "id": "dd5606d0-e672-4993-8d91-e9d6080ce768",
+              "name": "Estado del caso",
+              "value": "={{ $json.fields?.[\"Estado del caso\"] || \"Nueva sesión\" }}",
+              "type": "string"
+            },
+            {
+              "id": "dabdf081-0374-4fe8-8a47-941b49802aab",
+              "name": "Datos clave",
+              "value": "={{ $json.fields?.[\"Datos clave\"] || \"Sin datos previos\" }}",
+              "type": "string"
+            },
+            {
+              "id": "741a3d65-48c7-4ad1-acab-fe74a5428c8f",
+              "name": "chatInput",
+              "value": "={{\n  \"Mensaje actual: \" + $(\"When chat message received\").item.json.chatInput +\n  \"\\n\\n[INICIO DE CONTEXTO COMPARTIDO]\\n\" +\n  \"Resumen anterior: \" + ($json.fields?.[\"Resumen consolidado\"] || \"Sin resumen previo\") +\n  \"\\nDatos clave anteriores: \" + ($json.fields?.[\"Datos clave\"] || \"Sin datos previos\") +\n  \"\\nEstado del caso: \" + ($json.fields?.[\"Estado del caso\"] || \"Sin estado previo\") +\n  \"\\n[FIN DEL CONTEXTO COMPARTIDO]\"\n}}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "bd6b0e46-7b78-4a78-8a72-eeea86a4027a",
+      "name": "Edit Fields4",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -1872,
+        -704
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "ROL\nSos el asistente virtual de mates.mam, un emprendimiento de mates artesanales y accesorios.\n\nOBJETIVO\nAtender consultas de clientes y colaborar con el Manager en la derivación de tareas a los Workers.\n\nREGLAS\n- Si el cliente consulta por productos, precios, stock o características, consultá Airtable antes de responder.\n- Si el cliente solicita registrar una consulta, reconocé la solicitud sin rechazarla.\n- No inventes precios, stock ni características.\n- Respondé en español, de forma amable, profesional y directa.\n- No utilices lenguaje inclusivo.\n- No confirmes acciones que no se hayan ejecutado correctamente.\n\nDERIVACIÓN\n- El Manager utiliza el Switch para dirigir las consultas al Worker correspondiente.\n- Las consultas sobre productos deben dirigirse al Worker 1.\n- Las solicitudes de registro de consultas deben dirigirse al Worker 2.\n- No rechaces solicitudes de registro antes de que el Worker 2 pueda ejecutarlas.\n- No afirmes que una consulta fue registrada hasta recibir la confirmación del Worker 2.\n\nLIMITACIONES\n- No inventes información.\n- No confirmes registros, pagos, reservas ni envíos si no se ejecutaron mediante una herramienta habilitada.\nMEMORIA PERSISTENTE\n\n- Antes de responder, revisá si existe información previa del cliente en el contexto compartido recuperado de Airtable.\n- Utilizá esa información para mantener la continuidad de la conversación y evitar preguntar nuevamente datos que el cliente ya proporcionó.\n- Si existe un resumen anterior, tenelo en cuenta junto con el mensaje actual.\n- No inventes recuerdos ni supongas información que no esté en el contexto.\n- Si no hay información previa disponible, atendé la consulta utilizando las herramientas habilitadas y las reglas existentes.\n\nCONTEXTO COMPARTIDO\n\nCuando recibas información entre los siguientes delimitadores, utilizala como memoria de la sesión:\n\n[INICIO DE CONTEXTO COMPARTIDO]\nAquí se incorporará el resumen consolidado y los datos clave recuperados de Airtable.\n[FIN DEL CONTEXTO COMPARTIDO]\n\nLa información del contexto compartido sirve como referencia de conversaciones anteriores, pero no reemplaza la consulta a Airtable cuando debas verificar precios, stock o características de productos.\nMEMORIA Y RESUMEN DE SESIÓN\n\nAl procesar cada mensaje, identificá la información importante del cliente que deba conservarse para futuras interacciones.\n\nConservá únicamente datos relevantes, como:\n- Productos consultados.\n- Preferencias del cliente.\n- Precios informados y confirmados.\n- Consultas pendientes.\n- Acciones que se deben realizar.\n\nNo inventes información ni reemplaces datos confirmados por suposiciones.\n",
+          "maxIterations": 5,
+          "forceToolCallOnFirstIteration": false
+        }
+      },
+      "id": "463c18e5-e438-4273-933f-c007ee3d69d8",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1920,
+        -384
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "ba269cec-f5c3-4b4d-97f4-1128e2d0cdd7",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1936,
+        -80
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Busca información actualizada de los productos de mates.mam en Airtable. Utilizá esta herramienta de forma autónoma siempre que el cliente consulte por productos disponibles, precios, stock, características, materiales, colores, tipos o descripciones.\n\nTambién utilizá Airtable cuando el cliente solicite información general sobre qué productos están disponibles o compare dos o más productos.\n\nAntes de responder cualquier consulta que dependa de información comercial actualizada, consultá Airtable para evitar inventar datos.\n\nLa herramienta devuelve información sobre nombre, descripción, tipo, material, color, precio y stock. Utilizá exclusivamente los datos obtenidos de Airtable para responder consultas relacionadas con estos aspectos.\n\nSi Airtable no devuelve información sobre el producto solicitado, indicá al cliente que no se encontró ese producto o dato en la información disponible. No inventes precios, stock, características ni disponibilidad.",
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appXAmDZ1F1e3ZpFt",
+          "mode": "list",
+          "cachedResultName": "Proyecto Final – Pipeline HITL con IA",
+          "cachedResultUrl": "https://airtable.com/appXAmDZ1F1e3ZpFt"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblYViwEf1plgg7jj",
+          "mode": "list",
+          "cachedResultName": "Productos de mates.mam",
+          "cachedResultUrl": "https://airtable.com/appXAmDZ1F1e3ZpFt/tblYViwEf1plgg7jj"
+        },
+        "options": {}
+      },
+      "id": "bb301af8-e02f-40b4-ad4f-19389541ec6a",
+      "name": "Search records in Airtable",
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.2,
+      "position": [
+        -1744,
+        -176
+      ],
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "wsVobSScDQFO9k9H",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "marcosmenghi@hotmail.com",
+        "subject": "Registro de ejecución - mates.mam",
+        "message": "=<h3>Registro de ejecución - mates.mam</h3>\n<p><strong>Consulta del cliente:</strong><br>\n{{ $('When chat message received').item.json.chatInput }}</p>\n<p><strong>Respuesta del AI Agent:</strong><br>\n{{ $json.output }}</p>",
+        "options": {}
+      },
+      "id": "e0223714-f29b-49bf-bee8-e69dbf199394",
+      "name": "Send a message",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -1248,
+        -656
+      ],
+      "webhookId": "d9bff12f-667d-407f-ba89-7f94d32ab6f6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kvTG3WqzBTeObUT9",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "id": "6d8baf5f-1c55-4353-bf15-939e1737a75f",
+      "name": "Chat",
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1.3,
+      "position": [
+        -1040,
+        -496
+      ],
+      "webhookId": "2f2fbcff-a337-4d5b-89a7-b0e6af1f6c00"
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appXAmDZ1F1e3ZpFt",
+          "mode": "list",
+          "cachedResultName": "Proyecto Final – Pipeline HITL con IA",
+          "cachedResultUrl": "https://airtable.com/appXAmDZ1F1e3ZpFt"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblNgH9IPGv9AGGf2",
+          "mode": "list",
+          "cachedResultName": "Memoria de sesiones",
+          "cachedResultUrl": "https://airtable.com/appXAmDZ1F1e3ZpFt/tblNgH9IPGv9AGGf2"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Session_ID": "={{ $('When chat message received').item.json.sessionId }}",
+            "Fecha de actualización": "={{ $now.toFormat('yyyy-MM-dd') }}",
+            "Estado del caso": "En curso",
+            "Datos clave": "={{ $('When chat message received').item.json.chatInput }}",
+            "Resumen consolidado": "={{ $('AI Agent').item.json.output }}",
+            "Cantidad_mensajes": "={{ Number($('Edit Fields4').item.json.fields?.Cantidad_mensajes || 0) + 1 }}"
+          },
+          "matchingColumns": [
+            "Session_ID"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Session_ID",
+              "displayName": "Session_ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Fecha de actualización",
+              "displayName": "Fecha de actualización",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Resumen consolidado",
+              "displayName": "Resumen consolidado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Estado del caso",
+              "displayName": "Estado del caso",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Datos clave",
+              "displayName": "Datos clave",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Cantidad_mensajes",
+              "displayName": "Cantidad_mensajes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "4c5b1e2d-9cfd-4b62-adb7-5e24c075c2fd",
+      "name": "Create or update a record",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -800,
+        -592
+      ],
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "wsVobSScDQFO9k9H",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "854a768e-ac77-443e-9f92-62ef1008f7d6",
+              "leftValue": "={{ Number($json.fields?.Cantidad_mensajes || 0) }}",
+              "rightValue": 5,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "39281348-72ec-4400-8211-62157be7d599",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        -656,
+        -720
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Generá un resumen consolidado de esta conversación de atención al cliente de mates.mam.\n\nSession ID: {{ $json.fields?.Session_ID }}\nCantidad de mensajes: {{ $json.fields?.Cantidad_mensajes }}\n\nResumen previo de la sesión:\n{{ $('Edit Fields4').item.json['Resumen consolidado'] }}\n\nÚltimo mensaje del cliente:\n{{ $('When chat message received').item.json.chatInput }}\n\nÚltima respuesta del asistente:\n{{ $('AI Agent').item.json.output }}\n\nINSTRUCCIONES:\nGenerá un resumen consolidado y actualizado de la sesión, utilizando el resumen previo, los mensajes y la última respuesta del asistente.\n\nIdentificá:\n- asunto_principal: tema central de la conversación.\n- puntos_clave: lista de datos importantes, preferencias, productos, precios, necesidades y decisiones del cliente.\n- accion_requerida: próxima acción pendiente o \"Ninguna\" si no hay acciones pendientes.\n\nConservá los datos importantes de interacciones anteriores. No inventes información y eliminá las repeticiones.\n\nDevolvé el resultado con esta estructura JSON:\n{\n  \"asunto_principal\": \"Descripción breve del tema central\",\n  \"puntos_clave\": [\n    \"Dato importante 1\",\n    \"Dato importante 2\"\n  ],\n  \"accion_requerida\": \"Próxima acción pendiente\"\n}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Sos un asistente que resume conversaciones de clientes de una tienda de mates. Respondé solo con el JSON pedido, en español. No inventes datos: si un dato del cliente no aparece, dejalo como cadena vacía. No menciones nombres internos como Worker 1 o Worker 2."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "id": "fde119c6-2778-4a04-9316-64648812bcb6",
+      "name": "Generar resumen de la conversación",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -768,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "responsesApiEnabled": false,
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "id": "8a1dd202-f9b9-46fc-995f-93807dbe4bc9",
+      "name": "Modelo Resumen (gpt-4o-mini)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -880,
+        320
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "Gateway credits",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"session_id\": {\n      \"type\": \"string\"\n    },\n    \"cantidad_mensajes\": {\n      \"type\": \"number\"\n    },\n    \"resumen\": {\n      \"type\": \"string\",\n      \"description\": \"Resumen breve de toda la conversación\"\n    },\n    \"intencion_cliente\": {\n      \"type\": \"string\"\n    },\n    \"productos_de_interes\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"datos_cliente\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"nombre\": {\n          \"type\": \"string\"\n        },\n        \"localidad\": {\n          \"type\": \"string\"\n        },\n        \"codigo_postal\": {\n          \"type\": \"string\"\n        },\n        \"medio_de_pago\": {\n          \"type\": \"string\"\n        },\n        \"tipo_de_entrega\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"consultas_pendientes\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"proximos_pasos\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"estado_del_caso\": {\n      \"type\": \"string\",\n      \"enum\": [\n        \"Nuevo\",\n        \"En curso\",\n        \"Esperando datos del cliente\",\n        \"Listo para cerrar\"\n      ]\n    }\n  },\n  \"required\": [\n    \"session_id\",\n    \"cantidad_mensajes\",\n    \"resumen\",\n    \"intencion_cliente\",\n    \"productos_de_interes\",\n    \"datos_cliente\",\n    \"consultas_pendientes\",\n    \"proximos_pasos\",\n    \"estado_del_caso\"\n  ]\n}"
+      },
+      "id": "08a1b426-a788-48df-9849-caf66ea880fe",
+      "name": "Estructura JSON del resumen",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -496,
+        336
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appXAmDZ1F1e3ZpFt",
+          "mode": "list",
+          "cachedResultName": "Proyecto Final – Pipeline HITL con IA"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblNgH9IPGv9AGGf2",
+          "mode": "list",
+          "cachedResultName": "Memoria de sesiones"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('If1').item.json.id }}",
+            "Resumen consolidado": "={{ $json.output.resumen }}",
+            "Estado del caso": "={{ $json.output.estado_del_caso }}",
+            "Datos clave": "={{ JSON.stringify({ intencion_cliente: $json.output.intencion_cliente, productos_de_interes: $json.output.productos_de_interes, datos_cliente: $json.output.datos_cliente, consultas_pendientes: $json.output.consultas_pendientes, proximos_pasos: $json.output.proximos_pasos }) }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Resumen consolidado",
+              "displayName": "Resumen consolidado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Estado del caso",
+              "displayName": "Estado del caso",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Datos clave",
+              "displayName": "Datos clave",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "47e25fa4-e2fc-44cb-bfa7-6428f9fceff5",
+      "name": "Guardar resumen en Memoria de sesiones",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -416,
+        -576
+      ],
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "wsVobSScDQFO9k9H",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('When chat message received').item.json.chatInput }}",
+                    "rightValue": "producto",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "d038ac13-b855-4d60-9bf8-7e5d2bc2ccbd"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4c676914-0236-4793-bf35-bc7ca49e3f55",
+                    "leftValue": "={{ $('When chat message received').item.json.chatInput }}",
+                    "rightValue": "consulta",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "835ed7c5-624c-40bb-b220-660c2f4f0a17",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -1584,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a0a47e7b-f632-4725-b05b-681df17e8368",
+              "name": "consulta",
+              "value": "={{ $('When chat message received').item.json.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fb682a39-b355-49d1-a1c0-22546bd96261",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -1344,
+        -384
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "pI4TRjkvZHXUKS3t",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/pI4TRjkvZHXUKS3t",
+          "cachedResultName": "Worker 1 - Productos mates.mam"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Consulta": "={{ $json.consulta }}"
+          },
+          "matchingColumns": [
+            "Consulta"
+          ],
+          "schema": [
+            {
+              "id": "Consulta",
+              "displayName": "Consulta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "1e12087e-72a1-421c-b081-a8b11f81a0d0",
+      "name": "Call 'Worker 1 - Productos mates.mam'",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        -1040,
+        -288
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ca7788c9-c30e-447a-8f10-6bc7ab02f63d",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "f192a26d-1338-40bb-8fe6-018f02424e6b",
+              "name": "mensaje",
+              "value": "No se pudo obtener la información de los productos. Intentá nuevamente.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ded86ecf-c5eb-43b0-ac28-155b687f3f37",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -608,
+        -352
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6a25a4c1-874a-48d6-afe1-16429640ec86",
+              "name": "consulta",
+              "value": "={{ $('When chat message received').item.json.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1bdc7a76-eab5-4678-ac23-cf18c6d78d28",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -1376,
+        -96
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "7NXUdtOJ5d69PYfe",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/7NXUdtOJ5d69PYfe",
+          "cachedResultName": "Worker 2 - Registro de Consultas mates.mam"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "consulta": "={{ $json.consulta }}"
+          },
+          "matchingColumns": [
+            "consulta"
+          ],
+          "schema": [
+            {
+              "id": "consulta",
+              "displayName": "consulta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "2069d35a-afd5-48ea-b0e3-369d3ef5d82a",
+      "name": "Call 'Worker 2 - Registro de Consultas mates.mam'",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.4,
+      "position": [
+        -992,
+        -64
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "987eafc0-c0d5-4684-aa48-e23ea9686dcd",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "eb9619c3-c047-43b1-89ab-cc9895965521",
+              "name": "mensaje",
+              "value": "No se pudo registrar la consulta por Gmail",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "191add93-4dc4-4fd8-9f06-2117bc551c93",
+      "name": "Edit Fields3",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -608,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appXAmDZ1F1e3ZpFt",
+          "mode": "list",
+          "cachedResultName": "Proyecto Final – Pipeline HITL con IA",
+          "cachedResultUrl": "https://airtable.com/appXAmDZ1F1e3ZpFt"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblNgH9IPGv9AGGf2",
+          "mode": "list",
+          "cachedResultName": "Memoria de sesiones",
+          "cachedResultUrl": "https://airtable.com/appXAmDZ1F1e3ZpFt/tblNgH9IPGv9AGGf2"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Session_ID": "={{ $(\"When chat message received\").item.json.sessionId }}",
+            "Fecha de actualización": "={{ $now.toFormat('yyyy-MM-dd') }}",
+            "Resumen consolidado": "=Primera interacción del cliente. Todavía no hay un resumen de conversaciones anteriores.",
+            "Estado del caso": "=Nueva sesión",
+            "Datos clave": "={{ $(\"When chat message received\").item.json.chatInput }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Session_ID",
+              "displayName": "Session_ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Fecha de actualización",
+              "displayName": "Fecha de actualización",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Resumen consolidado",
+              "displayName": "Resumen consolidado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Estado del caso",
+              "displayName": "Estado del caso",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Datos clave",
+              "displayName": "Datos clave",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Cantidad_mensajes",
+              "displayName": "Cantidad_mensajes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "32c23ea3-2782-4d6a-98c0-b3f677b77334",
+      "name": "Create a record",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -2256,
+        -320
+      ],
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "wsVobSScDQFO9k9H",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nfor (const item of items) {\n  item.json.Session_ID = item.json.sessionId || 'session_sin_id';\n  item.json.mensajeActual = item.json.chatInput || '';\n  item.json.Cantidad_mensajes = Number(item.json.Cantidad_mensajes || 0) + 1;\n}\n\nreturn items;"
+      },
+      "id": "a785f319-2f62-4344-aeb2-3c2fe690a318",
+      "name": "Code in JavaScript",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2720,
+        -704
+      ]
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "maxResults": 1,
+        "filters": {
+          "includeSpamTrash": false,
+          "labelIds": [
+            "Label_1999805191720704849"
+          ],
+          "readStatus": "unread"
+        }
+      },
+      "id": "21ad78e7-2cae-4952-b5cf-62df78c292d6",
+      "name": "Gmail Trigger",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -3200,
+        -144
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kvTG3WqzBTeObUT9",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "2a66c1ce-2cbb-4726-b4df-15eae1f3aeb1",
+              "leftValue": "={{ $json.Subject }}",
+              "rightValue": "Auto-reply",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "bfde5bdb-5b15-4219-8e25-bcd581fa2e9b",
+              "leftValue": "={{ $json.Subject }}",
+              "rightValue": "Out of office",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "4a90811b-954b-4fbe-8831-75808162f849",
+              "leftValue": "={{ $json.Subject }}",
+              "rightValue": "Undeliverable",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "919aaf70-c2c8-411c-979a-15a7e65ad113",
+              "leftValue": "={{ $json.From }}",
+              "rightValue": "noreply@",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "eb626656-8f4c-44ae-8854-b69733646671",
+              "leftValue": "={{ $json.Subject || '' }}",
+              "rightValue": "automatic reply",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "39f52615-b104-4df9-a0b3-a20e41785981",
+              "leftValue": "={{ $json.Subject || '' }}",
+              "rightValue": "respuesta automática",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "400c6832-1175-4371-a9c9-77804371c4b7",
+              "leftValue": "={{ $json.Subject || '' }}",
+              "rightValue": "delivery status notification",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "4b011d5a-3431-4dab-8975-d77d247ba5ce",
+              "leftValue": "={{ $json.From || '' }}",
+              "rightValue": "no-reply@",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "e9d8624d-9f81-458f-819f-6b4eedba55cb",
+              "leftValue": "={{ $json.From || '' }}",
+              "rightValue": "donotreply@",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "ac920f2b-f929-4000-aa68-6b1a9d19c628",
+              "leftValue": "={{ $json.From || '' }}",
+              "rightValue": "mailer-daemon@",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "looseTypeValidation": "=",
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "id": "e2962bfe-b8a1-489c-8adb-547eebc38177",
+      "name": "If2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        -3072,
+        -272
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "search",
+        "filterGroupsUi": {
+          "filterGroupsValues": [
+            {
+              "filtersUi": {
+                "filterValues": [
+                  {
+                    "propertyName": "email|string",
+                    "value": "={{ ($json.From.match(/<([^>]+)>/)?.[1] || $json.From).trim() }}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "id": "63d36906-80fd-4c95-9d30-c073f02b88b7",
+      "name": "Search contacts",
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        -3040,
+        -32
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "hubspotOAuth2Api": {
+          "id": "PINiNq7EtmRyntoM",
+          "name": "HubSpot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "dea3c672-8ab0-4d2a-95bd-3df2cbae28c4",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "909f57b5-872e-4eb4-ad8b-4cc27221b88c",
+      "name": "If3",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        -2848,
+        -176
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "email": "={{ ($('Gmail Trigger').first().json.From.match(/<([^>]+)>/)?.[1] || $('Gmail Trigger').first().json.From).trim() }}",
+        "additionalFields": {},
+        "options": {}
+      },
+      "id": "dffc14d3-b47e-487a-8cac-b86cc75f6218",
+      "name": "Create or update a contact",
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "position": [
+        -2752,
+        48
+      ],
+      "credentials": {
+        "hubspotOAuth2Api": {
+          "id": "PINiNq7EtmRyntoM",
+          "name": "HubSpot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $json.Subject ? 'Re: ' + $json.Subject : 'Respuesta a tu consulta' }}",
+        "message": "Hola,  Gracias por comunicarte con mates.mam. Recibimos tu consulta y estamos revisando la información para darte una respuesta.  Saludos, Equipo mates.mam",
+        "options": {
+          "sendTo": "={{ $('Gmail Trigger').first().json.From.match(/<([^>]+)>/)?.[1] || $('Gmail Trigger').first().json.From }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -2640,
+        -256
+      ],
+      "id": "9e67c491-f848-4bf9-9d31-6d243875ae3d",
+      "name": "Create a draft",
+      "webhookId": "0fbbe995-5e0b-4f63-89c7-3daf7a387c58",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kvTG3WqzBTeObUT9",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0BRFPFASTF",
+          "mode": "list",
+          "cachedResultName": "todo-automatización-coderhouse"
+        },
+        "text": "={{ '📩 Nueva consulta recibida\\nRemitente: ' + $json.remitente + '\\nAsunto: ' + $json.asunto + '\\n' + $json.notificacion }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        -2208,
+        -112
+      ],
+      "id": "29c0428e-d1de-4b8d-812a-ed8bafea8f2e",
+      "name": "Send a message1",
+      "webhookId": "bcdcbba8-3dde-4fa7-8dc0-b41914c6fbc3",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "Ni15sit7PgWb9nGO",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "65c9c1d2-9803-480d-8bf8-729f727c2f60",
+              "name": "remitente",
+              "value": "={{ $('Gmail Trigger').first().json.From }}",
+              "type": "string"
+            },
+            {
+              "id": "88357f7b-5bec-443f-8c85-a593b5a69f81",
+              "name": "asunto",
+              "value": "={{ $('Gmail Trigger').first().json.Subject }}",
+              "type": "string"
+            },
+            {
+              "id": "b0072081-ab02-4d51-9cb3-87f68fa88e31",
+              "name": "notificacion",
+              "value": "Se creó un borrador en Gmail y requiere revisión humana.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -2416,
+        -112
+      ],
+      "id": "c5b31b5c-f1f8-4ab0-8626-dcabb0f417f9",
+      "name": "Edit Fields5"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Search records1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Chat",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records in Airtable": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat": {
+      "main": [
+        [
+          {
+            "node": "Create or update a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create or update a record": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Generar resumen de la conversación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar resumen de la conversación": {
+      "main": [
+        [
+          {
+            "node": "Guardar resumen en Memoria de sesiones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo Resumen (gpt-4o-mini)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generar resumen de la conversación",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Estructura JSON del resumen": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generar resumen de la conversación",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Call 'Worker 1 - Productos mates.mam'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Worker 1 - Productos mates.mam'": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Call 'Worker 2 - Registro de Consultas mates.mam'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Worker 2 - Registro de Consultas mates.mam'": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Search contacts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search contacts": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Create a draft",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create or update a contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create or update a contact": {
+      "main": [
+        [
+          {
+            "node": "Create a draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "fb1167c0-ecb2-4dcc-a0e7-d18efc83ee53",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "87d28270b6e9e7c409bd40073ba1fa6399cdf7aa8fb1b6624970805a79428f84"
+  },
+  "nodeGroups": [],
+  "id": "QlFChBaoeeTzjloM",
+  "tags": []
+}
