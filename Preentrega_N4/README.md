@@ -7,7 +7,7 @@
 
 ## 2. Objetivo
 
-Integrar el workflow existente de n8n con tres herramientas externas para conectar el sistema multi-agente con el CRM, la casilla de soporte y el canal de operaciones, incorporando controles preventivos.
+Integrar el workflow existente del Módulo 3 con tres herramientas externas mediante OAuth2: HubSpot, Gmail y Slack. Incorporar controles preventivos para evitar respuestas automáticas, contactos duplicados y envíos de correos sin revisión humana.
 
 ## 3. Herramientas integradas
 
@@ -16,62 +16,47 @@ Integrar el workflow existente de n8n con tres herramientas externas para conect
 * **Correo electrónico:** Gmail.
 * **Mensajería interna:** Slack.
 
-Las tres herramientas fueron conectadas mediante credenciales OAuth2.
+Las tres credenciales se conectaron mediante OAuth2.
 
 ## 4. Controles implementados
 
-1. **IF anti-auto-respuestas:** filtra correos automáticos para evitar bucles.
-2. **Búsqueda en HubSpot:** consulta si el contacto existe antes de realizar una operación de creación o actualización.
-3. **IF de validación:** determina la ruta del workflow según el resultado de la búsqueda.
-4. **Create Draft en Gmail:** genera un borrador para revisión humana, sin enviar automáticamente el correo.
-5. **Edit Fields:** reduce y organiza los datos que se envían a Slack.
-6. **Notificación en Slack:** informa sobre la consulta recibida y el borrador generado.
+1. **IF2 – Filtro anti-auto-respuestas:** identifica asuntos y remitentes asociados a respuestas automáticas.
+2. **Search contacts – HubSpot:** busca contactos por correo electrónico antes de decidir si corresponde crear uno.
+3. **IF3 – Validación de existencia:** dirige el flujo según el resultado de la búsqueda.
+4. **Create Draft – Gmail:** genera un borrador para revisión humana. No envía automáticamente el correo.
+5. **Edit Fields5 – Limpieza del payload:** prepara únicamente los campos `From`, `Subject` y `BodyText`.
+6. **Send a message1 – Slack:** comunica la recepción de una consulta y los datos correspondientes al equipo de operaciones.
 
-## 5. Archivo del workflow
+## 5. Guía de ejecución
 
-El archivo exportado desde n8n es:
+1. Importar `checkpoint4_marcos_menghi.json` en n8n mediante la opción de importar workflow.
+2. Configurar las credenciales OAuth2 propias de HubSpot, Gmail y Slack.
+3. Verificar que las tres credenciales indiquen conexión correcta.
+4. Ejecutar una prueba del Gmail Trigger con un correo de consulta.
+5. Comprobar el funcionamiento del IF2.
+6. Verificar la búsqueda de contactos en HubSpot y la decisión del IF3.
+7. Comprobar que Gmail cree un borrador, sin enviar el correo.
+8. Ejecutar Edit Fields5 y verificar los campos `From`, `Subject` y `BodyText`.
+9. Ejecutar Slack y comprobar la recepción de la notificación en el canal configurado.
+
+**Importante:** las pruebas se realizan manualmente. El workflow se mantiene sin publicar ni activar automáticamente.
+
+## 6. Evidencias
+
+La carpeta `evidencias` contiene las capturas de las conexiones OAuth2 y las pruebas de los nodos principales.
+
+## 7. Archivo del workflow
 
 `checkpoint4_marcos_menghi.json`
 
-Permite importar el workflow y revisar su configuración.
+El archivo JSON permite importar el workflow en n8n.
 
-**Ubicación:** directorio principal del repositorio.
+## 8. Seguridad y revisión humana
 
-## 6. Guía de ejecución
+La integración utiliza OAuth2. Gmail trabaja exclusivamente con la operación **Create Draft**, manteniendo la revisión humana antes del envío.
 
-1. Ingresar a n8n.
-2. Importar el archivo JSON mediante la opción de importar workflow.
-3. Configurar las credenciales propias de HubSpot, Gmail y Slack.
-4. Verificar las conexiones antes de ejecutar las pruebas.
-5. Probar el filtro IF con correos de prueba.
-6. Verificar la búsqueda de contactos en HubSpot.
-7. Comprobar que Gmail genere un borrador y no envíe el mensaje.
-8. Verificar que Slack reciba la notificación con los campos configurados.
+La revisión específica de los scopes de mínimo privilegio debe realizarse sobre los permisos concedidos a cada aplicación.
 
-El workflow debe mantenerse desactivado durante las pruebas manuales para evitar ejecuciones no deseadas.
+## 9. Autor
 
-## 7. Pruebas realizadas
-
-Se realizaron pruebas individuales de los nodos principales:
-
-* Recepción de correos mediante Gmail Trigger.
-* Clasificación mediante IF.
-* Búsqueda de contactos en HubSpot.
-* Validación de existencia del contacto.
-* Creación de borrador en Gmail.
-* Preparación del payload mediante Edit Fields.
-* Envío de notificación de prueba a Slack.
-
-## 8. Evidencias
-
-Las capturas de pantalla de las conexiones y de los nodos principales se encuentran en la carpeta `evidencias` del repositorio.
-
-## 9. Seguridad y control humano
-
-La solución utiliza OAuth2 para conectar los servicios externos. La operación Create Draft establece una instancia de revisión humana antes del envío definitivo.
-
-Los permisos deben limitarse a las operaciones y datos necesarios para cada integración.
-
-## 10. Repositorio
-
-Proyecto integrador de automatización IA – mates.mam.
+Marcos Menghi – 2026
