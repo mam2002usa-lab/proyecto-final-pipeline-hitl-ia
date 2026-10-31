@@ -13,8 +13,8 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.5,
       "position": [
-        -2944,
-        -640
+        -3616,
+        -624
       ],
       "webhookId": "f5dd765e-4874-4660-9447-e09e4d42a79b"
     },
@@ -44,7 +44,7 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.2,
       "position": [
-        -2672,
+        -3392,
         -528
       ],
       "alwaysOutputData": true,
@@ -85,8 +85,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.4,
       "position": [
-        -2416,
-        -592
+        -3168,
+        -528
       ]
     },
     {
@@ -115,8 +115,8 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.2,
       "position": [
-        -2144,
-        -688
+        -2944,
+        -528
       ],
       "credentials": {
         "airtableOAuth2Api": {
@@ -175,8 +175,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        -1872,
-        -704
+        -2720,
+        -528
       ]
     },
     {
@@ -184,7 +184,7 @@
         "promptType": "define",
         "text": "={{ $json.chatInput }}",
         "options": {
-          "systemMessage": "ROL\nSos el asistente virtual de mates.mam, un emprendimiento de mates artesanales y accesorios.\n\nOBJETIVO\nAtender consultas de clientes y colaborar con el Manager en la derivación de tareas a los Workers.\n\nREGLAS\n- Si el cliente consulta por productos, precios, stock o características, consultá Airtable antes de responder.\n- Si el cliente solicita registrar una consulta, reconocé la solicitud sin rechazarla.\n- No inventes precios, stock ni características.\n- Respondé en español, de forma amable, profesional y directa.\n- No utilices lenguaje inclusivo.\n- No confirmes acciones que no se hayan ejecutado correctamente.\n\nDERIVACIÓN\n- El Manager utiliza el Switch para dirigir las consultas al Worker correspondiente.\n- Las consultas sobre productos deben dirigirse al Worker 1.\n- Las solicitudes de registro de consultas deben dirigirse al Worker 2.\n- No rechaces solicitudes de registro antes de que el Worker 2 pueda ejecutarlas.\n- No afirmes que una consulta fue registrada hasta recibir la confirmación del Worker 2.\n\nLIMITACIONES\n- No inventes información.\n- No confirmes registros, pagos, reservas ni envíos si no se ejecutaron mediante una herramienta habilitada.\nMEMORIA PERSISTENTE\n\n- Antes de responder, revisá si existe información previa del cliente en el contexto compartido recuperado de Airtable.\n- Utilizá esa información para mantener la continuidad de la conversación y evitar preguntar nuevamente datos que el cliente ya proporcionó.\n- Si existe un resumen anterior, tenelo en cuenta junto con el mensaje actual.\n- No inventes recuerdos ni supongas información que no esté en el contexto.\n- Si no hay información previa disponible, atendé la consulta utilizando las herramientas habilitadas y las reglas existentes.\n\nCONTEXTO COMPARTIDO\n\nCuando recibas información entre los siguientes delimitadores, utilizala como memoria de la sesión:\n\n[INICIO DE CONTEXTO COMPARTIDO]\nAquí se incorporará el resumen consolidado y los datos clave recuperados de Airtable.\n[FIN DEL CONTEXTO COMPARTIDO]\n\nLa información del contexto compartido sirve como referencia de conversaciones anteriores, pero no reemplaza la consulta a Airtable cuando debas verificar precios, stock o características de productos.\nMEMORIA Y RESUMEN DE SESIÓN\n\nAl procesar cada mensaje, identificá la información importante del cliente que deba conservarse para futuras interacciones.\n\nConservá únicamente datos relevantes, como:\n- Productos consultados.\n- Preferencias del cliente.\n- Precios informados y confirmados.\n- Consultas pendientes.\n- Acciones que se deben realizar.\n\nNo inventes información ni reemplaces datos confirmados por suposiciones.\n",
+          "systemMessage": "ROL\nSos el asistente virtual de mates.mam, un emprendimiento de mates artesanales y accesorios.\n\nOBJETIVO\nAtender consultas de clientes y colaborar con el Manager en la derivación de tareas a los Workers.\n\nREGLAS\n- Si el cliente consulta por productos, precios, stock o características, consultá Airtable antes de responder.\n- Si el cliente solicita registrar una consulta, reconocé la solicitud sin rechazarla.\n- No inventes precios, stock ni características.\n- Respondé en español, de forma amable, profesional y directa.\n- No utilices lenguaje inclusivo.\n- No confirmes acciones que no se hayan ejecutado correctamente.\n\nDERIVACIÓN\n- El Manager utiliza el Switch para dirigir las consultas al Worker correspondiente.\n- Las consultas sobre productos deben dirigirse al Worker 1.\n- Las solicitudes de registro de consultas deben dirigirse al Worker 2.\n- No rechaces solicitudes de registro antes de que el Worker 2 pueda ejecutarlas.\n- No afirmes que una consulta fue registrada hasta recibir la confirmación del Worker 2.\n\nLIMITACIONES\n- No inventes información.\n- No confirmes registros, pagos, reservas ni envíos si no se ejecutaron mediante una herramienta habilitada.\nMEMORIA PERSISTENTE\n\n- Antes de responder, revisá si existe información previa del cliente en el contexto compartido recuperado de Airtable.\n- Utilizá esa información para mantener la continuidad de la conversación y evitar preguntar nuevamente datos que el cliente ya proporcionó.\n- Si existe un resumen anterior, tenelo en cuenta junto con el mensaje actual.\n- No inventes recuerdos ni supongas información que no esté en el contexto.\n- Si no hay información previa disponible, atendé la consulta utilizando las herramientas habilitadas y las reglas existentes.\n\nCONTEXTO COMPARTIDO\n\nCuando recibas información entre los siguientes delimitadores, utilizala como memoria de la sesión:\n\n[INICIO DE CONTEXTO COMPARTIDO]\nAquí se incorporará el resumen consolidado y los datos clave recuperados de Airtable.\n[FIN DEL CONTEXTO COMPARTIDO]\n\nLa información del contexto compartido sirve como referencia de conversaciones anteriores, pero no reemplaza la consulta a Airtable cuando debas verificar precios, stock o características de productos.\nMEMORIA Y RESUMEN DE SESIÓN\n\nAl procesar cada mensaje, identificá la información importante del cliente que deba conservarse para futuras interacciones.\n\nConservá únicamente datos relevantes, como:\n- Productos consultados.\n- Preferencias del cliente.\n- Precios informados y confirmados.\n- Consultas pendientes.\n- Acciones que se deben realizar.\n\nNo inventes información ni reemplaces datos confirmados por suposiciones.\n\nCONSULTA DOCUMENTAL RAG (QDRANT)\n\n* Cuando el cliente consulte sobre productos, materiales, características, información descriptiva o documentación de mates.mam, utilizá la herramienta Qdrant Vector Store para recuperar información de la colección documental.\n* No respondas consultas documentales sin intentar primero recuperar información mediante Qdrant.\n* Utilizá la información recuperada de Qdrant como fuente documental.\n* Para precios y stock actualizados, consultá Airtable. Airtable es la fuente principal para esos datos.\n* Si la consulta incluye productos, precios y stock, utilizá ambas herramientas cuando corresponda.\n* No inventes información ni completes datos que no estén disponibles.\n* Si Qdrant no devuelve información suficiente, informá que no encontraste ese dato en la documentación.\n\nREGLAS DE RESPUESTA DOCUMENTAL RAG:\n\n* Para consultas sobre productos, materiales, características e información descriptiva, consultá primero la herramienta Qdrant Vector Store.\n* Respondé únicamente con información respaldada por los documentos recuperados.\n* Cuando respondas, indicá la fuente documental y, si está disponible, la sección correspondiente.\n* Si la información solicitada no aparece en los documentos o no se recupera evidencia suficiente, respondé exactamente: \"No sé\".\n* No inventes, supongas ni completes información faltante.\n* Para precios y stock actualizados, consultá Airtable, que es la fuente principal para esos datos.\n* Si una consulta requiere información documental y datos de precios o stock, consultá ambas fuentes.\n\n\n",
           "maxIterations": 5,
           "forceToolCallOnFirstIteration": false
         }
@@ -194,8 +194,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        -1920,
-        -384
+        -2496,
+        -528
       ]
     },
     {
@@ -213,8 +213,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        -1936,
-        -80
+        -2496,
+        -304
       ],
       "credentials": {
         "openAiApi": {
@@ -251,8 +251,8 @@
       "type": "n8n-nodes-base.airtableTool",
       "typeVersion": 2.2,
       "position": [
-        -1744,
-        -176
+        -2368,
+        -304
       ],
       "credentials": {
         "airtableOAuth2Api": {
@@ -273,8 +273,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        -1248,
-        -656
+        -2144,
+        -720
       ],
       "webhookId": "d9bff12f-667d-407f-ba89-7f94d32ab6f6",
       "credentials": {
@@ -294,8 +294,8 @@
       "type": "@n8n/n8n-nodes-langchain.chat",
       "typeVersion": 1.3,
       "position": [
-        -1040,
-        -496
+        -2144,
+        -528
       ],
       "webhookId": "2f2fbcff-a337-4d5b-89a7-b0e6af1f6c00"
     },
@@ -418,8 +418,8 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.2,
       "position": [
-        -800,
-        -592
+        -1920,
+        -528
       ],
       "credentials": {
         "airtableOAuth2Api": {
@@ -457,8 +457,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.4,
       "position": [
-        -656,
-        -720
+        -1696,
+        -528
       ]
     },
     {
@@ -480,8 +480,8 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.9,
       "position": [
-        -768,
-        128
+        -1472,
+        -624
       ]
     },
     {
@@ -501,8 +501,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        -880,
-        320
+        -1472,
+        -416
       ],
       "credentials": {
         "openAiApi": {
@@ -522,8 +522,8 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        -496,
-        336
+        -1344,
+        -416
       ]
     },
     {
@@ -608,8 +608,8 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.2,
       "position": [
-        -416,
-        -576
+        -1120,
+        -528
       ],
       "credentials": {
         "airtableOAuth2Api": {
@@ -675,8 +675,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -1584,
-        -320
+        -2144,
+        -32
       ]
     },
     {
@@ -698,8 +698,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        -1344,
-        -384
+        -1920,
+        -224
       ]
     },
     {
@@ -743,8 +743,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.4,
       "position": [
-        -1040,
-        -288
+        -1696,
+        -224
       ],
       "onError": "continueErrorOutput"
     },
@@ -773,8 +773,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        -608,
-        -352
+        -1408,
+        -224
       ]
     },
     {
@@ -796,8 +796,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        -1376,
-        -96
+        -1920,
+        -32
       ]
     },
     {
@@ -841,8 +841,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.4,
       "position": [
-        -992,
-        -64
+        -1696,
+        -32
       ],
       "onError": "continueErrorOutput"
     },
@@ -871,8 +871,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        -608,
-        -64
+        -1408,
+        -32
       ]
     },
     {
@@ -981,8 +981,8 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.2,
       "position": [
-        -2256,
-        -320
+        -2944,
+        -336
       ],
       "credentials": {
         "airtableOAuth2Api": {
@@ -1000,8 +1000,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2720,
-        -704
+        -3392,
+        -720
       ]
     },
     {
@@ -1027,8 +1027,8 @@
       "type": "n8n-nodes-base.gmailTrigger",
       "typeVersion": 1.4,
       "position": [
-        -3200,
-        -144
+        -4144,
+        416
       ],
       "credentials": {
         "gmailOAuth2": {
@@ -1150,8 +1150,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.4,
       "position": [
-        -3072,
-        -272
+        -3728,
+        384
       ]
     },
     {
@@ -1179,8 +1179,8 @@
       "type": "n8n-nodes-base.hubspot",
       "typeVersion": 2.2,
       "position": [
-        -3040,
-        -32
+        -3408,
+        512
       ],
       "alwaysOutputData": true,
       "credentials": {
@@ -1220,8 +1220,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.4,
       "position": [
-        -2848,
-        -176
+        -3040,
+        416
       ]
     },
     {
@@ -1236,8 +1236,8 @@
       "type": "n8n-nodes-base.hubspot",
       "typeVersion": 2.2,
       "position": [
-        -2752,
-        48
+        -2816,
+        224
       ],
       "credentials": {
         "hubspotOAuth2Api": {
@@ -1258,8 +1258,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        -2640,
-        -256
+        -2768,
+        576
       ],
       "id": "9e67c491-f848-4bf9-9d31-6d243875ae3d",
       "name": "Create a draft",
@@ -1282,14 +1282,14 @@
           "mode": "list",
           "cachedResultName": "todo-automatización-coderhouse"
         },
-        "text": "={{ '📩 Nueva consulta recibida\\nRemitente: ' + $json.remitente + '\\nAsunto: ' + $json.asunto + '\\n' + $json.notificacion }}",
+        "text": "={{ '📩 Nueva consulta recibida\\nRemitente: ' + $json.From + '\\nAsunto: ' + $json.Subject + '\\n' + $json.BodyText }}",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.7,
       "position": [
-        -2208,
-        -112
+        -2000,
+        304
       ],
       "id": "29c0428e-d1de-4b8d-812a-ed8bafea8f2e",
       "name": "Send a message1",
@@ -1307,20 +1307,20 @@
           "assignments": [
             {
               "id": "65c9c1d2-9803-480d-8bf8-729f727c2f60",
-              "name": "remitente",
+              "name": "From",
               "value": "={{ $('Gmail Trigger').first().json.From }}",
               "type": "string"
             },
             {
               "id": "88357f7b-5bec-443f-8c85-a593b5a69f81",
-              "name": "asunto",
+              "name": "Subject",
               "value": "={{ $('Gmail Trigger').first().json.Subject }}",
               "type": "string"
             },
             {
               "id": "b0072081-ab02-4d51-9cb3-87f68fa88e31",
-              "name": "notificacion",
-              "value": "Se creó un borrador en Gmail y requiere revisión humana.",
+              "name": "BodyText",
+              "value": "={{ $('Gmail Trigger').first().json.snippet }}",
               "type": "string"
             }
           ]
@@ -1330,11 +1330,198 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        -2416,
-        -112
+        -2496,
+        384
       ],
       "id": "c5b31b5c-f1f8-4ab0-8626-dcabb0f417f9",
       "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -3488,
+        -32
+      ],
+      "id": "b4a1b30b-331e-4572-8d2b-10904c5ee978",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Busca información en la documentación oficial de mates.mam para responder consultas de clientes sobre productos, precios, stock, materiales y características.\n\nUtiliza la colección documental de Qdrant `mates_mam_documentos`.\n\nResponde únicamente con información recuperada de los documentos. No inventes datos ni supongas información que no esté documentada.\n",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "mates_mam_documentos",
+          "mode": "list",
+          "cachedResultName": "mates_mam_documentos"
+        },
+        "topK": 2,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1.3,
+      "position": [
+        -3616,
+        -240
+      ],
+      "id": "44a64822-c905-4013-aff0-ea45e80bcc23",
+      "name": "Qdrant Vector Store",
+      "credentials": {
+        "qdrantApi": {
+          "id": "zr3CulAE5O8h2uwB",
+          "name": "Qdrant account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "Documento_Maestro_mates_mam.pdf",
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -3680,
+        128
+      ],
+      "id": "de2435f7-951a-42b0-9472-8d7ce0190702",
+      "name": "Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YXwGLUIzVyKxH4f0",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1qBudVkxR3r3v35SIWK55BMUtrBjT4fcl",
+          "mode": "list",
+          "cachedResultName": "Documento_Maestro_mates_mam.pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/1qBudVkxR3r3v35SIWK55BMUtrBjT4fcl/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -3456,
+        128
+      ],
+      "id": "802e0d9e-96f2-4188-8c4c-fae0e4d64bd1",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YXwGLUIzVyKxH4f0",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.2,
+      "position": [
+        -3216,
+        128
+      ],
+      "id": "01fbd329-58a9-4f8a-9bfb-ed883b58d46a",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        -3200,
+        -80
+      ],
+      "id": "1b12bad3-5438-442f-9b3a-9663ef70bd99",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "resource": "search",
+        "operation": "queryPoints",
+        "collectionName": {
+          "__rl": true,
+          "value": "mates_mam_documentos",
+          "mode": "list",
+          "cachedResultName": "mates_mam_documentos"
+        },
+        "scoreThreshold": 0.7,
+        "limit": 2,
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-qdrant.qdrant",
+      "typeVersion": 1,
+      "position": [
+        -2864,
+        -64
+      ],
+      "id": "bc8711f9-5184-4fc9-98c9-6ba29418822b",
+      "name": "Query Points1",
+      "credentials": {
+        "qdrantRestApi": {
+          "id": "M5argCkbXnOT8rUz",
+          "name": "Qdrant account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "427f7ea1-9a67-42d3-ab0d-bea5c1b001d7",
+              "leftValue": "={{ $json.From }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        -2320,
+        432
+      ],
+      "id": "f247e11f-d30e-47bf-ab09-bdca2af3d18b",
+      "name": "If4"
     }
   ],
   "pinData": {},
@@ -1673,6 +1860,71 @@
       "main": [
         [
           {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        []
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        []
+      ]
+    },
+    "Qdrant Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
             "node": "Send a message1",
             "type": "main",
             "index": 0
@@ -1686,7 +1938,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "fb1167c0-ecb2-4dcc-a0e7-d18efc83ee53",
+  "versionId": "fa671255-d1ee-48de-b99c-f26acb59b75c",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "87d28270b6e9e7c409bd40073ba1fa6399cdf7aa8fb1b6624970805a79428f84"
